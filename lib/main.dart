@@ -10,16 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'The fantastic Startups names generator',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('The fantastic Startups names generator'),
-        ),
-        body: const Center(
-          child: RandomWords(),
-        ),
-      ),
+    return const MaterialApp(
+      title: 'The fantastic Startup names generator',
+      home: RandomWords(),
     );
   }
 }
@@ -35,40 +28,55 @@ class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
   final _saved = <WordPair>{};
   final _biggerFont = const TextStyle(fontSize: 18);
+
+  void _pushSaved() {}
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemBuilder: (context, i) {
-        if (i.isOdd) return const Divider();
-
-        final index = i ~/ 2;
-        if (index >= _suggestions.length) {
-          _suggestions.addAll(generateWordPairs().take(10));
-        }
-        final alreadySaved = _saved.contains(_suggestions[index]);
-
-        return ListTile(
-          title: Text(
-            _suggestions[index].asPascalCase,
-            style: _biggerFont,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('The fantastic Startup names generator'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: _pushSaved,
+            tooltip: 'Saved Suggestions',
           ),
-          trailing: Icon(
-            alreadySaved ? Icons.favorite : Icons.favorite_border,
-            color: alreadySaved ? Colors.red : null,
-            semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
-          ),
-          onTap: () {
-            setState(() {
-              if (!alreadySaved) {
-                _saved.add(_suggestions[index]);
-              } else {
-                _saved.remove(_suggestions[index]);
-              }
-            });
-          },
-        );
-      },
+        ],
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemBuilder: (context, i) {
+          if (i.isOdd) return const Divider();
+
+          final index = i ~/ 2;
+          if (index >= _suggestions.length) {
+            _suggestions.addAll(generateWordPairs().take(10));
+          }
+          final alreadySaved = _saved.contains(_suggestions[index]);
+
+          return ListTile(
+            title: Text(
+              _suggestions[index].asPascalCase,
+              style: _biggerFont,
+            ),
+            trailing: Icon(
+              alreadySaved ? Icons.favorite : Icons.favorite_border,
+              color: alreadySaved ? Colors.red : null,
+              semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
+            ),
+            onTap: () {
+              setState(() {
+                if (!alreadySaved) {
+                  _saved.add(_suggestions[index]);
+                } else {
+                  _saved.remove(_suggestions[index]);
+                }
+              });
+            },
+          );
+        },
+      ),
     );
   }
 }
